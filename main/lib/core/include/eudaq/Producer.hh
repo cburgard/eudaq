@@ -46,12 +46,12 @@ namespace eudaq {
 			   const std::string &runcontrol);
 
   private:
-    void OnInitialise() override final;
-    void OnConfigure() override final;
-    void OnStartRun() override final;
-    void OnStopRun() override final;
-    void OnReset() override final;
-    void OnTerminate() override final;
+    void OnInitialise() override;
+    void OnConfigure() override;
+    void OnStartRun() override;
+    void OnStopRun() override;
+    void OnReset() override;
+    void OnTerminate() override;
     void OnStatus() override;
     
   private:
