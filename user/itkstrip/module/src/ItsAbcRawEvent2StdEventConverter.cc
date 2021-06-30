@@ -7,12 +7,18 @@ class ItsAbcRawEvent2StdEventConverter: public eudaq::StdEventConverter{
 public:
   bool Converting(eudaq::EventSPC d1, eudaq::StdEventSP d2, eudaq::ConfigSPC conf) const override;
   static const uint32_t m_id_factory = eudaq::cstr2hash("ITS_ABC");
+  static const uint32_t m_id1_factory = eudaq::cstr2hash("ITS_ABC_DUT");
+  static const uint32_t m_id2_factory = eudaq::cstr2hash("ITS_ABC_Timing");
   static const uint32_t PLANE_ID_OFFSET_ABC = 10;
 };
 
 namespace{
   auto dummy0 = eudaq::Factory<eudaq::StdEventConverter>::
     Register<ItsAbcRawEvent2StdEventConverter>(ItsAbcRawEvent2StdEventConverter::m_id_factory);
+  auto dummy1 = eudaq::Factory<eudaq::StdEventConverter>::
+    Register<ItsAbcRawEvent2StdEventConverter>(ItsAbcRawEvent2StdEventConverter::m_id1_factory);
+  auto dummy2 = eudaq::Factory<eudaq::StdEventConverter>::
+    Register<ItsAbcRawEvent2StdEventConverter>(ItsAbcRawEvent2StdEventConverter::m_id2_factory);
 }
 
 typedef std::map<uint32_t, std::pair<uint32_t, uint32_t>> BlockMap;
@@ -64,20 +70,37 @@ bool ItsAbcRawEvent2StdEventConverter::Converting(eudaq::EventSPC d1, eudaq::Std
   std::map<uint32_t, std::pair<uint32_t, uint32_t>> 
     block_map={{0,{0,1}},
 	       {1,{1,1}},
-	       {2,{0,0}},
-	       {3,{1,0}},
-	       {4,{0,2}},
-	       {5,{1,2}},
-	       {6,{2,1}},
-	       {7,{3,1}},
-	       {8,{2,0}},
-	       {9,{3,0}},
-	       {10,{2,2}},
-	       {11,{3,2}},
+	       {2,{2,1}},
+	       {3,{3,1}},
+	       {4,{0,4}},
+	       {5,{1,4}},
+	       {6,{2,4}},
+	       {7,{3,4}},
+	       {8,{0,1}},
+	       {9,{1,1}},
+	       {10,{0,4}},
+	       {11,{1,4}},
 	       {12,{0,4}},
 	       {13,{1,4}},
 	       {14,{2,4}},
 	       {15,{3,4}}};
+  // std::map<uint32_t, std::pair<uint32_t, uint32_t>> 
+  //   block_map={{0,{0,1}},
+  // 	       {1,{1,1}},
+  // 	       {2,{0,0}},
+  // 	       {3,{1,0}},
+  // 	       {4,{0,2}},
+  // 	       {5,{1,2}},
+  // 	       {6,{2,1}},
+  // 	       {7,{3,1}},
+  // 	       {8,{2,0}},
+  // 	       {9,{3,0}},
+  // 	       {10,{2,2}},
+  // 	       {11,{3,2}},
+  // 	       {12,{0,4}},
+  // 	       {13,{1,4}},
+  // 	       {14,{2,4}},
+  // 	       {15,{3,4}}};
 #endif
 
   auto block_n_list = raw->GetBlockNumList();
@@ -93,12 +116,12 @@ bool ItsAbcRawEvent2StdEventConverter::Converting(eudaq::EventSPC d1, eudaq::Std
       std::vector<bool> channels;
       eudaq::uchar2bool(block.data(), block.data() + block.size(), channels);
       eudaq::StandardPlane plane(plane_id, "ITS_ABC", "ABC");
-      // plane.SetSizeZS(channels.size(), 1, 0);//r0
-      plane.SetSizeZS(1,channels.size(), 0);//ss
+      plane.SetSizeZS(channels.size(), 1, 0);//r0
+      //plane.SetSizeZS(1,channels.size(), 0);//ss
       for(size_t i = 0; i < channels.size(); ++i) {
 	if(channels[i]){
-	  // plane.PushPixel(i, 1 , 1);//r0
-	  plane.PushPixel(1, i , 1);//ss
+	  plane.PushPixel(i, 1 , 1);//r0
+	  //plane.PushPixel(1, i , 1);//ss
 	}
       }
       d2->AddPlane(plane);

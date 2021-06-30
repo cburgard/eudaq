@@ -122,18 +122,18 @@ void PIStageProducer::DoConfigure(){
   if(!m_allow_changes)
       EUDAQ_THROW("Refusing to change position as the run is still ongoing");
 
-  double pX     = conf->Get("positionX",-10000);
-  double pY     = conf->Get("positionY",-10000);
-  double pRot   = conf->Get("positionRot",-10000);
+  double pX     = conf->Get("positionX",-10000.0);
+  double pY     = conf->Get("positionY",-10000.0);
+  double pRot   = conf->Get("positionRot",-10000.0);
   bool servoX   = conf->Get("keepServoOnX",1);
   bool servoY   = conf->Get("keepServoOnY",1);
   bool servoRot = conf->Get("keepServoOnRot",1);
 
-  if(pX == -10000 && m_connected_X)
+  if(pX == -10000.0 && m_connected_X)
          EUDAQ_THROW("No movement position given for X");
-  if(pY == -10000 && m_connected_Y)
+  if(pY == -10000.0 && m_connected_Y)
          EUDAQ_THROW("No movement position given for Y");
-  if(pRot == -10000 && m_connected_Rot)
+  if(pRot == -10000.0 && m_connected_Rot)
          EUDAQ_THROW("No movement position given for Rot");
 
   if(m_connected_X)     if(!m_controller->move(m_axis_X.c_str(),pX,servoX)) EUDAQ_THROW("X Movement failed");
@@ -213,4 +213,5 @@ bool PIStageProducer::setupStage(std::string axisname, double refPos, double ran
     std::cout << "MaxLimit: " << m_controller->getMaxLimit(axisname.c_str()) << std::endl;
     std::cout << "Set to reference ...";
 
+    return true;
 }
